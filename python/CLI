@@ -1,0 +1,68 @@
+import socket
+import sys
+from scapy import interfaces
+from scapy.all import sniff, IP, TCP, UDP
+
+# Define a function to capture and print source and destination IP addresses
+def capture_and_print_ip_addresses(packet_count):
+    def packet_callback(packet):
+        if IP in packet:
+            source_ip = packet[IP].src
+            dest_ip = packet[IP].dst
+            protocol = packet[IP].proto  # Get the IP protocol number
+            # Convert the protocol number to a protocol name (e.g., TCP, UDP)
+            protocol_name = "Unknown"
+            if protocol == 6:
+                protocol_name = "TCP"
+            elif protocol == 17:
+                protocol_name = "UDP"
+                
+            print(f"Source IP: {source_ip}, \t\t\t Destination IP: {dest_ip}, \t\t\t\tProtocol: {protocol_name}")
+            
+
+    sniff(count=packet_count, prn=packet_callback)
+
+def sniff_():
+   print("How many packets do you want to sniff:\t")
+   packet_count= int(input('Option: ')) # Change this to the number of packets you want to capture and print
+   capture_and_print_ip_addresses(packet_count)
+   capture = sniff(iface ="eth0", count=packet_count)
+   print(capture)
+   if __name__ == "__main__":
+      print("Do you wish to continue? ")
+      option = int(input("1---Yes ....2---No: "))
+      if(option == 1):
+          return sniff_()
+      
+      elif(option==2):
+          options()
+
+def options():
+   print("========== WELCOME TO PYTHON PACKET SNIFFER ==========\n\n")
+   print("Select an option\n")
+    
+   print("1.Portocols Sniffed\n\n")
+    
+   print("2.Sniff Packets\n\n")
+
+   print("3.Ports Sniffed\n\n")
+
+
+   choice = int(input('Option: '))
+   if(choice == 1):
+      capture = sniff(iface ="eth0", count=10)
+      print(capture)
+       
+   elif(choice == 2):
+      
+         sniff_()
+   elif(choice ==3 ):
+   # no error handling is done here, excuse me for that
+     hostname = sys.argv[1]
+   # IP lookup from hostname
+     print(f'The {hostname} IP Address is {socket.gethostbyname(hostname)}')
+     
+def main():
+
+   options()
+main()  # Call the main function to start the execution 
